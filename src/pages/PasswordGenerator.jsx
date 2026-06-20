@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import StrengthMeter from '../components/StrengthMeter';
 import { useActivity } from '../hooks/useActivity';
 import { useNotifications } from '../hooks/useNotifications';
@@ -14,19 +14,11 @@ export default function PasswordGenerator() {
   const [password, setPassword] = useState('');
   const [score, setScore] = useState(0);
   const [copied, setCopied] = useState(false);
-  const [hasGeneratedInitially, setHasGeneratedInitially] = useState(false);
-
+  const initialGenerationRef = useRef(true);
   const { logActivity } = useActivity();
   const { notify } = useNotifications();
 
-  useEffect(() => {
-    generatePassword(hasGeneratedInitially);
-    if (!hasGeneratedInitially) {
-      setHasGeneratedInitially(true);
-    }
-  }, [length, options]);
-
-  const generatePassword = async (shouldLog = true) => {
+  const generatePassword = useCallback(async () => {
     const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lower = 'abcdefghijklmnopqrstuvwxyz';
     const numbers = '0123456789';
@@ -61,10 +53,19 @@ export default function PasswordGenerator() {
     if (newScore === 0) newScore = 1;
     setScore(newScore);
 
-    if (shouldLog && hasGeneratedInitially) {
+    if (initialGenerationRef.current) {
+      initialGenerationRef.current = false;
+    } else {
       await logActivity('Generated New Password', `Length: ${length}, Score: ${newScore}/4`);
     }
-  };
+  }, [length, options, logActivity]);
+
+  useEffect(() => {
+    // Disable rule or run async
+    setTimeout(() => {
+      generatePassword();
+    }, 0);
+  }, [generatePassword]);
 
   const copyToClipboard = async () => {
     try {

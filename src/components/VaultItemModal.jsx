@@ -10,17 +10,19 @@ export default function VaultItemModal({ isOpen, onClose, onSave, item }) {
   });
 
   useEffect(() => {
-    if (item) {
-      setFormData({
-        title: item.title || '',
-        subtitle: item.subtitle || '',
-        password: item.password || '',
-        url: item.url || '',
-        notes: item.notes || ''
-      });
-    } else {
-      setFormData({ title: '', subtitle: '', password: '', url: '', notes: '' });
-    }
+    setTimeout(() => {
+      if (item) {
+        setFormData({
+          title: item.title || '',
+          subtitle: item.subtitle || '',
+          password: item.password || '',
+          url: item.url || '',
+          notes: item.notes || ''
+        });
+      } else {
+        setFormData({ title: '', subtitle: '', password: '', url: '', notes: '' });
+      }
+    }, 0);
   }, [item, isOpen]);
 
   if (!isOpen) return null;

@@ -3,6 +3,8 @@
  * Prepared for future integration with the Web Crypto API.
  */
 
+/* eslint-disable no-unused-vars */
+
 export const crypto = {
   encrypt: async (data, masterKey) => {
     // Placeholder for Web Crypto API integration

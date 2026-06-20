@@ -27,3 +27,4 @@ build
 *.njsproj
 *.sln
 *.sw?
+node_modules_old/

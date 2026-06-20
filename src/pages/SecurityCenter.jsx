@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SecurityStats from '../components/SecurityStats';
 import { useVault } from '../hooks/useVault';
 import { useSettings } from '../hooks/useSettings';
 import { useNotifications } from '../hooks/useNotifications';
