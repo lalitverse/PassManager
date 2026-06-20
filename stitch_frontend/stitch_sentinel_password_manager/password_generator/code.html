@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CipherVault - Password Generator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&amp;family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#4d8eff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "error-container": "#93000a",
+                    "on-primary-fixed": "#001a42",
+                    "tertiary": "#ffb95f",
+                    "on-primary-container": "#00285d",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#2a1700",
+                    "background": "#131313",
+                    "surface-container-highest": "#353534",
+                    "on-surface-variant": "#c2c6d6",
+                    "inverse-surface": "#e5e2e1",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-dim": "#131313",
+                    "on-secondary-fixed": "#002113",
+                    "surface-container": "#201f1f",
+                    "outline": "#8c909f",
+                    "on-background": "#e5e2e1",
+                    "inverse-on-surface": "#313030",
+                    "tertiary-container": "#ca8100",
+                    "surface-tint": "#adc6ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary": "#adc6ff",
+                    "inverse-primary": "#005ac2",
+                    "on-secondary-container": "#00311f",
+                    "on-tertiary-container": "#3e2400",
+                    "on-secondary": "#003824",
+                    "secondary-container": "#00a572",
+                    "surface-container-high": "#2a2a2a",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-low": "#1c1b1b",
+                    "on-tertiary": "#472a00",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "secondary": "#4edea3",
+                    "surface-variant": "#353534",
+                    "on-primary": "#002e6a",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-bright": "#393939",
+                    "on-error": "#690005",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-fixed-variant": "#004395",
+                    "secondary-fixed": "#6ffbbe",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface": "#131313",
+                    "outline-variant": "#424754"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "base": "4px",
+                    "margin-desktop": "48px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "mono-code": ["Geist Mono"],
+                    "headline-lg": ["Geist"],
+                    "label-md": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "headline-sm": ["Geist"],
+                    "body-md": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "mono-code": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "0", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(23, 23, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-panel:hover {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .strength-segment {
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #adc6ff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: scale 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:active {
+            scale: 0.9;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- Navigation Drawer (Desktop) -->
+<aside class="fixed left-0 top-0 h-full w-[260px] hidden md:flex flex-col py-xl bg-surface-container dark:bg-surface-container-low border-r border-white/5 shadow-xl z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md text-primary font-bold">CipherVault</h1>
+</div>
+<nav class="flex-1 px-sm space-y-1">
+<!-- Vault -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="lock">lock</span>
+<span class="font-body-md text-body-md">Vault</span>
+</a>
+<!-- Security (Active State) -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-primary-container/10 text-primary border-l-2 border-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-body-md text-body-md">Security</span>
+</a>
+<!-- Activity -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-body-md text-body-md">Activity</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-lg pt-lg border-t border-white/5 flex flex-col gap-xs">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">AU</div>
+<div class="flex flex-col">
+<span class="font-body-md text-on-surface font-semibold">Admin User</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider">Enterprise Tier</span>
+</div>
+</div>
+<span class="text-[10px] text-on-surface-variant/60 mt-sm">Last sync: 2m ago</span>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[260px] min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-background/80 backdrop-blur-xl dark:bg-background/80 text-primary w-full sticky top-0 z-50 border-b border-white/10 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16">
+<div class="flex items-center gap-sm md:hidden">
+<span class="material-symbols-outlined text-primary" data-icon="security">security</span>
+<span class="text-headline-md font-headline-md font-bold">CipherVault</span>
+</div>
+<div class="hidden md:block">
+<h2 class="font-headline-sm text-headline-sm text-primary">Password Generator</h2>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined p-2 hover:bg-surface-variant/20 rounded-full transition-colors active:scale-95 duration-100" data-icon="notifications">notifications</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant/40 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a high-tech security administrator, lit by a soft blue glow from a computer monitor. The portrait is minimalist with a deep charcoal background, matching the premium cybersecurity theme. Cinematic lighting highlights sharp facial features and modern spectacles." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIXqOlLwJCMxv7AN4UCRutjVqF3azeDG4ES311HEmBzjmPxsdXLdBt8V5ZtdkHWwWSWtbULWwhurHswP0VhXMU34m05-xN01ViPtfxiwLwsp8zY6e0RfLI7NnA3ztLtJsxuYnT-74SGnIpX2sVi365RbYghV8HLIr9GtxHUWyuGXn-gkV1EWhBLdADEsZHm9eOl8sL6cLJVOPXgCGCKydLhvWBYHA21X0EqRX1WC4boiRAnR7bGy_9eODMf_GwVuacuio57JELfw"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="flex-1 p-margin-mobile md:p-margin-desktop max-w-[1000px] mx-auto w-full pb-32">
+<!-- Bento Grid Section -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Output Field (Featured) -->
+<section class="md:col-span-12 glass-panel rounded-xl p-xl flex flex-col gap-md relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] pointer-events-none"></div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-primary uppercase tracking-widest">Generated Password</label>
+<div class="flex items-center justify-between gap-md group/field">
+<input class="bg-transparent border-none p-0 font-mono-code text-[28px] md:text-[42px] leading-tight text-on-surface focus:ring-0 w-full selection:bg-primary/30" id="password-output" readonly="" type="text" value="v9$Kp&amp;R2!mQ8*zX"/>
+<button class="flex items-center justify-center p-md bg-primary-container text-on-primary-container rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg" onclick="copyToClipboard()">
+<span class="material-symbols-outlined" data-icon="content_copy">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Strength Meter -->
+<div class="flex flex-col gap-xs mt-md">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface-variant">Security Strength</span>
+<span class="font-label-md text-label-md text-secondary uppercase font-bold" id="strength-label">Strong</span>
+</div>
+<div class="grid grid-cols-4 gap-sm">
+<div class="strength-segment bg-secondary" id="seg-1"></div>
+<div class="strength-segment bg-secondary" id="seg-2"></div>
+<div class="strength-segment bg-secondary" id="seg-3"></div>
+<div class="strength-segment bg-secondary" id="seg-4"></div>
+</div>
+</div>
+</section>
+<!-- Controls Left (Length) -->
+<section class="md:col-span-7 glass-panel rounded-xl p-lg flex flex-col justify-between">
+<div class="flex flex-col gap-lg">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Length</h3>
+<div class="bg-surface-container-high px-md py-sm rounded-lg border border-white/10">
+<span class="font-mono-code text-primary text-headline-sm" id="length-value">16</span>
+</div>
+</div>
+<div class="py-md">
+<input id="length-slider" max="64" min="8" oninput="updateLength(this.value)" step="1" type="range" value="16"/>
+<div class="flex justify-between mt-sm">
+<span class="font-label-md text-label-md text-on-surface-variant">8</span>
+<span class="font-label-md text-label-md text-on-surface-variant">64</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-xl py-md bg-primary text-on-primary font-bold rounded-xl flex items-center justify-center gap-md hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/10" onclick="generatePassword()">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+                        GENERATE NEW PASSWORD
+                    </button>
+</section>
+<!-- Controls Right (Options) -->
+<section class="md:col-span-5 glass-panel rounded-xl p-lg flex flex-col gap-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-xs">Parameters</h3>
+<div class="space-y-sm">
+<!-- Uppercase -->
+<label class="flex items-center justify-between p-md rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+<span class="font-body-md text-on-surface">Uppercase (A-Z)</span>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="check-upper" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</label>
+<!-- Lowercase -->
+<label class="flex items-center justify-between p-md rounded-xl hover:bg-white/5 transition-colors cursor-pointer">
+<span class="font-body-md text-on-surface">Lowercase (a-z)</span>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="check-lower" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</label>
+<!-- Numbers -->
+<label class="flex items-center justify-between p-md rounded-xl hover:bg-white/5 transition-colors cursor-pointer">
+<span class="font-body-md text-on-surface">Numbers (0-9)</span>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="check-numbers" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</label>
+<!-- Symbols -->
+<label class="flex items-center justify-between p-md rounded-xl hover:bg-white/5 transition-colors cursor-pointer">
+<span class="font-body-md text-on-surface">Symbols (!@#$)</span>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="check-symbols" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</label>
+</div>
+</section>
+<!-- Security Tip Card -->
+<section class="md:col-span-12 glass-panel rounded-xl p-lg flex items-center gap-lg border-primary/20 bg-primary/5">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex-shrink-0 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="lightbulb">lightbulb</span>
+</div>
+<div class="flex flex-col gap-xs">
+<h4 class="font-body-md text-on-surface font-bold">Pro Tip: Character Diversity</h4>
+<p class="text-body-md text-on-surface-variant">Mixing symbols, numbers, and cases creates exponential complexity for brute-force attacks. Aim for at least 16 characters for maximum security.</p>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 w-full md:hidden z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container/90 backdrop-blur-lg border-t border-white/5 shadow-[0_-4px_12px_rgba(0,0,0,0.3)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 active:bg-white/5 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="lock">lock</span>
+<span class="font-label-md text-label-md">Vault</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl p-2 active:bg-white/5 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-label-md text-label-md">Security</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 active:bg-white/5 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-md text-label-md">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 active:bg-white/5 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<script>
+        function updateLength(val) {
+            document.getElementById('length-value').innerText = val;
+            generatePassword();
+        }
+
+        function generatePassword() {
+            const length = document.getElementById('length-slider').value;
+            const useUpper = document.getElementById('check-upper').checked;
+            const useLower = document.getElementById('check-lower').checked;
+            const useNumbers = document.getElementById('check-numbers').checked;
+            const useSymbols = document.getElementById('check-symbols').checked;
+
+            const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const lower = 'abcdefghijklmnopqrstuvwxyz';
+            const numbers = '0123456789';
+            const symbols = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+
+            let charset = '';
+            if (useUpper) charset += upper;
+            if (useLower) charset += lower;
+            if (useNumbers) charset += numbers;
+            if (useSymbols) charset += symbols;
+
+            if (charset === '') {
+                document.getElementById('password-output').value = 'Select at least one option';
+                updateStrength(0);
+                return;
+            }
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+
+            document.getElementById('password-output').value = password;
+            
+            // Calc Strength
+            let score = 0;
+            if (length >= 12) score++;
+            if (length >= 20) score++;
+            if (useUpper && useLower) score++;
+            if (useNumbers && useSymbols) score++;
+            updateStrength(score);
+        }
+
+        function updateStrength(score) {
+            const segments = ['seg-1', 'seg-2', 'seg-3', 'seg-4'];
+            const label = document.getElementById('strength-label');
+            
+            segments.forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.remove('bg-error', 'bg-tertiary', 'bg-secondary', 'bg-primary');
+                el.classList.add('bg-white/10');
+            });
+
+            if (score <= 1) {
+                label.innerText = 'Weak';
+                label.className = 'font-label-md text-label-md text-error uppercase font-bold';
+                document.getElementById('seg-1').classList.replace('bg-white/10', 'bg-error');
+            } else if (score === 2) {
+                label.innerText = 'Medium';
+                label.className = 'font-label-md text-label-md text-tertiary uppercase font-bold';
+                document.getElementById('seg-1').classList.replace('bg-white/10', 'bg-tertiary');
+                document.getElementById('seg-2').classList.replace('bg-white/10', 'bg-tertiary');
+            } else if (score === 3) {
+                label.innerText = 'Strong';
+                label.className = 'font-label-md text-label-md text-secondary uppercase font-bold';
+                document.getElementById('seg-1').classList.replace('bg-white/10', 'bg-secondary');
+                document.getElementById('seg-2').classList.replace('bg-white/10', 'bg-secondary');
+                document.getElementById('seg-3').classList.replace('bg-white/10', 'bg-secondary');
+            } else {
+                label.innerText = 'Impenetrable';
+                label.className = 'font-label-md text-label-md text-primary uppercase font-bold';
+                segments.forEach(id => document.getElementById(id).classList.replace('bg-white/10', 'bg-primary'));
+            }
+        }
+
+        async function copyToClipboard() {
+            const copyText = document.getElementById("password-output");
+            try {
+                await navigator.clipboard.writeText(copyText.value);
+                const btn = event.currentTarget;
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<span class="material-symbols-outlined" data-icon="check">check</span>';
+                setTimeout(() => btn.innerHTML = originalIcon, 2000);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+
+        // Initialize
+        window.onload = generatePassword;
+    </script>
+</body></html>

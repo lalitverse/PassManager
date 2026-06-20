@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CipherVault | Secure Password Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Geist+Mono:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#4d8eff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "error-container": "#93000a",
+                    "on-primary-fixed": "#001a42",
+                    "tertiary": "#ffb95f",
+                    "on-primary-container": "#00285d",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#2a1700",
+                    "background": "#131313",
+                    "surface-container-highest": "#353534",
+                    "on-surface-variant": "#c2c6d6",
+                    "inverse-surface": "#e5e2e1",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-dim": "#131313",
+                    "on-secondary-fixed": "#002113",
+                    "surface-container": "#201f1f",
+                    "outline": "#8c909f",
+                    "on-background": "#e5e2e1",
+                    "inverse-on-surface": "#313030",
+                    "tertiary-container": "#ca8100",
+                    "surface-tint": "#adc6ff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary": "#adc6ff",
+                    "inverse-primary": "#005ac2",
+                    "on-secondary-container": "#00311f",
+                    "on-tertiary-container": "#3e2400",
+                    "on-secondary": "#003824",
+                    "secondary-container": "#00a572",
+                    "surface-container-high": "#2a2a2a",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-low": "#1c1b1b",
+                    "on-tertiary": "#472a00",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "secondary": "#4edea3",
+                    "surface-variant": "#353534",
+                    "on-primary": "#002e6a",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-bright": "#393939",
+                    "on-error": "#690005",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-fixed-variant": "#004395",
+                    "secondary-fixed": "#6ffbbe",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface": "#131313",
+                    "outline-variant": "#424754"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "base": "4px",
+                    "margin-desktop": "48px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "mono-code": ["Geist Mono"],
+                    "headline-lg": ["Geist"],
+                    "label-md": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "headline-sm": ["Geist"],
+                    "body-md": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "mono-code": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "0", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0A;
+            color: #e5e2e1;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(23, 23, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(38, 38, 38, 0.8);
+        }
+        .vault-item-active {
+            max-height: 200px !important;
+            opacity: 1 !important;
+            margin-top: 12px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .strength-bar {
+            height: 4px;
+            border-radius: 2px;
+            transition: width 0.5s ease-in-out, background-color 0.3s;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353534;
+            border-radius: 3px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- Sidebar Navigation (Desktop) -->
+<aside class="fixed left-0 top-0 h-full w-[260px] hidden md:flex flex-col py-xl bg-surface-container dark:bg-surface-container-low border-r border-white/5 shadow-xl z-50">
+<div class="px-lg mb-xl">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary text-headline-md" style="font-variation-settings: 'FILL' 1;">security</span>
+<h1 class="font-headline-md text-headline-md text-primary font-bold">CipherVault</h1>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/50">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a high-tier enterprise administrator in a dark, tech-oriented setting. The lighting is low-key with subtle electric blue rim highlights, reflecting the CipherVault brand colors. The person has a serious yet approachable expression, fitting a security-conscious professional. High-contrast, clean corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWazbSwNVAgh18FSF0tQ4MTWo8399MZlOLDDEoV8Mkh88F0A6wa9Nye_xQOUuonNeySp4-FmzyO4krH2ulwBcmAW521UiNV3zaOfAH6B5vZ5yu6dhoSitZ6xkHJwicXhCylzxuV9HcR8QjsKC90fag7iA-ThYeH5csfad8kCd9v6fzhOBNgWZk4JEZcn3-REO9DCzDkj3YWSA8ZCjfN7Kt-0jE-Hh-bUO-AB22rKFOYpCen6VIJazZ8wAbjvMkXs-x1olcIQg09g"/>
+</div>
+<div class="overflow-hidden">
+<p class="font-label-md text-on-surface truncate">Admin User</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Enterprise Tier</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-sm">
+<a class="flex items-center gap-4 px-lg py-3 rounded-lg bg-primary-container/10 text-primary border-l-2 border-primary transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-body-md">Vault</span>
+</a>
+<a class="flex items-center gap-4 px-lg py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span class="font-body-md">Security</span>
+</a>
+<a class="flex items-center gap-4 px-lg py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body-md">Activity</span>
+</a>
+<a class="flex items-center gap-4 px-lg py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+</nav>
+<div class="px-lg mt-auto">
+<div class="p-3 rounded-lg bg-surface-container-lowest border border-white/5">
+<p class="text-[10px] text-on-surface-variant uppercase mb-1">Status</p>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="text-xs text-on-surface">End-to-End Encrypted</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top AppBar (Mobile) -->
+<header class="md:hidden sticky top-0 z-50 flex justify-between items-center px-margin-mobile h-16 w-full bg-background/80 backdrop-blur-xl border-b border-white/10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">security</span>
+<span class="text-headline-sm font-bold text-primary">CipherVault</span>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" data-alt="A small circular avatar of a professional user, styled with deep charcoal and electric blue accents. The visual style is sleek and technical, representing a high-security user identity in a minimalist digital environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkQMsrdOi2flhv4I5Pe4fF1gu5CBBdbiuiz7hxxrH8s0-FjEfqGwqI8WknR46XbGwkLVWNKxnMZ-_KpXyUFi1AiQPy6WvEPef0j_rcR_mM5LbiiLJ7Famki7F3ww2rnOYUWdrhjsjMh4wJ1y9PJHoG-VL3axt9rOj5luXo8E9TEa2k0HBGccnuorclPPkBO9lcLuKHD-200quEbhjz45FJqK4w7KHP07g-u_pC6ehb2z4QVGxqLhN27TDKlKMIyr-pX-4c3ROlkg"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="md:ml-[260px] min-h-screen p-margin-mobile md:p-margin-desktop pb-32">
+<!-- Header & Search -->
+<div class="max-w-5xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-lg mb-xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg md:text-headline-lg text-on-background mb-1">Password Vault</h2>
+<p class="text-on-surface-variant">Manage 42 secure entries across your enterprise.</p>
+</div>
+<div class="relative w-full md:w-96 group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-lowest border-white/5 rounded-xl py-3 pl-12 pr-4 text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none" placeholder="Search passwords, services..." type="text"/>
+</div>
+</div>
+<!-- Dashboard Stats Bento -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg mb-xl">
+<div class="glass-card p-lg rounded-2xl flex flex-col justify-between">
+<p class="text-label-md text-on-surface-variant uppercase tracking-wider mb-4">Security Score</p>
+<div class="flex items-end justify-between">
+<span class="text-4xl font-bold text-secondary">94%</span>
+<div class="flex gap-1 items-end h-8">
+<div class="w-1.5 h-4 bg-secondary/30 rounded-full"></div>
+<div class="w-1.5 h-6 bg-secondary/50 rounded-full"></div>
+<div class="w-1.5 h-8 bg-secondary rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="glass-card p-lg rounded-2xl flex flex-col justify-between">
+<p class="text-label-md text-on-surface-variant uppercase tracking-wider mb-4">Exposed Breaches</p>
+<div class="flex items-end justify-between">
+<span class="text-4xl font-bold text-on-surface">0</span>
+<span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="glass-card p-lg rounded-2xl flex flex-col justify-between bg-primary/5 border-primary/20">
+<p class="text-label-md text-primary uppercase tracking-wider mb-4">Total Items</p>
+<div class="flex items-end justify-between">
+<span class="text-4xl font-bold text-on-surface">128</span>
+<span class="material-symbols-outlined text-primary text-4xl">inventory_2</span>
+</div>
+</div>
+</div>
+<!-- Vault List -->
+<div class="space-y-4">
+<!-- Item 1: Google -->
+<div class="vault-item group">
+<div class="glass-card p-md md:p-lg rounded-2xl flex items-center gap-lg cursor-pointer" onclick="toggleExpand('vault-1')">
+<div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 flex-shrink-0">
+<span class="material-symbols-outlined text-on-surface" style="font-variation-settings: 'FILL' 1;">mail</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Google Workspace</h3>
+<p class="text-on-surface-variant truncate">admin.corporate@gmail.com</p>
+</div>
+<div class="hidden md:flex flex-col items-end gap-2 pr-4">
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-label-md border border-secondary/20">SECURE</span>
+<p class="text-[10px] text-on-surface-variant">Last used 2h ago</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-on-surface transition-transform duration-300" id="icon-vault-1">expand_more</span>
+</div>
+<!-- Expanded State -->
+<div class="max-h-0 overflow-hidden opacity-0 transition-all duration-300 px-md" id="vault-1">
+<div class="pt-4 pb-6 border-x border-b border-white/5 rounded-b-2xl bg-surface-container-low/30 backdrop-blur-md">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg px-lg">
+<div class="space-y-4">
+<div>
+<label class="text-xs text-on-surface-variant uppercase block mb-1">Password Strength</label>
+<div class="flex gap-1 mb-1">
+<div class="flex-1 h-1 rounded-full bg-secondary"></div>
+<div class="flex-1 h-1 rounded-full bg-secondary"></div>
+<div class="flex-1 h-1 rounded-full bg-secondary"></div>
+<div class="flex-1 h-1 rounded-full bg-secondary"></div>
+</div>
+<p class="text-[10px] text-secondary">Exceptional entropy: 128 bits</p>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-xl font-label-md flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">content_copy</span> Quick Copy
+                                        </button>
+<button class="flex-1 border border-white/10 hover:bg-white/5 py-2.5 rounded-xl font-label-md flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">edit</span> Edit Item
+                                        </button>
+</div>
+</div>
+<div class="flex flex-col justify-center gap-3">
+<div class="flex items-center justify-between p-3 rounded-lg bg-black/20">
+<span class="text-xs text-on-surface-variant">URL</span>
+<span class="text-xs text-primary truncate ml-4">accounts.google.com</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-black/20">
+<span class="text-xs text-on-surface-variant">2FA</span>
+<span class="text-xs text-secondary flex items-center gap-1">Enabled <span class="material-symbols-outlined text-[14px]">verified</span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2: GitHub -->
+<div class="vault-item group">
+<div class="glass-card p-md md:p-lg rounded-2xl flex items-center gap-lg cursor-pointer" onclick="toggleExpand('vault-2')">
+<div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 flex-shrink-0">
+<span class="material-symbols-outlined text-on-surface" style="font-variation-settings: 'FILL' 1;">code</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">GitHub Enterprise</h3>
+<p class="text-on-surface-variant truncate">dev-ops-master</p>
+</div>
+<div class="hidden md:flex flex-col items-end gap-2 pr-4">
+<span class="px-3 py-1 rounded-full bg-tertiary/10 text-tertiary text-label-md border border-tertiary/20">WEAK</span>
+<p class="text-[10px] text-on-surface-variant">Last used 1d ago</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-on-surface transition-transform duration-300" id="icon-vault-2">expand_more</span>
+</div>
+<div class="max-h-0 overflow-hidden opacity-0 transition-all duration-300 px-md" id="vault-2">
+<div class="pt-4 pb-6 border-x border-b border-white/5 rounded-b-2xl bg-surface-container-low/30 backdrop-blur-md">
+<div class="px-lg space-y-4">
+<div class="p-4 rounded-xl bg-error-container/10 border border-error/20 flex gap-3">
+<span class="material-symbols-outlined text-error">warning</span>
+<div>
+<p class="text-xs text-error font-bold">Weak Password Detected</p>
+<p class="text-[10px] text-on-error-container">This password is reused across 4 other services. Change it to improve security score.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-xl font-label-md flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">content_copy</span> Quick Copy
+                                    </button>
+<button class="flex-1 border border-white/10 hover:bg-white/5 py-2.5 rounded-xl font-label-md flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">auto_fix_high</span> Auto-Rotate
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3: AWS -->
+<div class="vault-item group">
+<div class="glass-card p-md md:p-lg rounded-2xl flex items-center gap-lg cursor-pointer" onclick="toggleExpand('vault-3')">
+<div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 flex-shrink-0">
+<span class="material-symbols-outlined text-on-surface" style="font-variation-settings: 'FILL' 1;">cloud</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">AWS Console</h3>
+<p class="text-on-surface-variant truncate">cloud-admin-root</p>
+</div>
+<div class="hidden md:flex flex-col items-end gap-2 pr-4">
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-label-md border border-secondary/20">SECURE</span>
+<p class="text-[10px] text-on-surface-variant">Last used 5m ago</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-on-surface transition-transform duration-300" id="icon-vault-3">expand_more</span>
+</div>
+<div class="max-h-0 overflow-hidden opacity-0 transition-all duration-300 px-md" id="vault-3">
+<div class="pt-4 pb-6 border-x border-b border-white/5 rounded-b-2xl bg-surface-container-low/30 backdrop-blur-md">
+<div class="px-lg flex gap-3">
+<button class="flex-1 bg-primary text-on-primary py-2.5 rounded-xl font-label-md flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">content_copy</span> Quick Copy
+                                </button>
+<button class="flex-1 border border-white/10 hover:bg-white/5 py-2.5 rounded-xl font-label-md flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">edit</span> Edit Item
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 md:bottom-12 right-8 w-16 h-16 rounded-2xl bg-primary text-on-primary shadow-[0_0_32px_rgba(173,198,255,0.4)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-3xl transition-transform group-hover:rotate-90">add</span>
+<div class="absolute right-20 bg-surface-container-high px-4 py-2 rounded-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+            Add New Entry
+        </div>
+</button>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container/90 backdrop-blur-lg border-t border-white/5 md:hidden">
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl p-2 w-16 h-16" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-md">Vault</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16 h-16" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span class="font-label-md">Security</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16 h-16" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md">Activity</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16 h-16" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</nav>
+<script>
+        function toggleExpand(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (el.classList.contains('vault-item-active')) {
+                el.classList.remove('vault-item-active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Close others
+                document.querySelectorAll('.vault-item-active').forEach(item => {
+                    item.classList.remove('vault-item-active');
+                    const otherId = item.id;
+                    document.getElementById('icon-' + otherId).style.transform = 'rotate(0deg)';
+                });
+                
+                el.classList.add('vault-item-active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Search highlight effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('input', (e) => {
+            const items = document.querySelectorAll('.vault-item');
+            const term = e.target.value.toLowerCase();
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(term)) {
+                    item.style.display = 'block';
+                    item.style.opacity = '1';
+                } else {
+                    item.style.display = 'none';
+                    item.style.opacity = '0';
+                }
+            });
+        });
+    </script>
+</body></html>
