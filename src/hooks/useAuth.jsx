@@ -22,6 +22,42 @@ export function AuthProvider({ children }) {
     loadUser();
   }, []);
 
+  const getLocalUsers = async () => {
+    return (await storage.get('cv_users')) || [];
+  };
+
+  const setLocalUsers = async (users) => {
+    await storage.set('cv_users', users);
+  };
+
+  const registerLocalUser = async (name, email, password) => {
+    const users = await getLocalUsers();
+    if (users.find(u => u.email === email)) {
+      throw new Error('User already exists');
+    }
+    const newUser = { name, email, password, createdAt: new Date().toISOString() };
+    await setLocalUsers([...users, newUser]);
+  };
+
+  const validateLocalLogin = async (email, password) => {
+    const users = await getLocalUsers();
+    const user = users.find(u => u.email === email);
+    if (!user || user.password !== password) {
+      throw new Error('Invalid email or password');
+    }
+    return user;
+  };
+
+  const resetLocalPassword = async (email, newPassword) => {
+    const users = await getLocalUsers();
+    const index = users.findIndex(u => u.email === email);
+    if (index === -1) {
+      throw new Error('User not found');
+    }
+    users[index].password = newPassword;
+    await setLocalUsers(users);
+  };
+
   const login = async (name, email) => {
     const newUser = {
       name,
@@ -31,7 +67,6 @@ export function AuthProvider({ children }) {
       lastLogin: new Date().toISOString()
     };
     
-    // If returning user, keep createdAt and avatar
     const existingUser = await storage.get('cv_user');
     if (existingUser && existingUser.email === email) {
       newUser.createdAt = existingUser.createdAt;
@@ -42,14 +77,13 @@ export function AuthProvider({ children }) {
     await storage.set('cv_user', newUser);
     await logActivity('Login', `User ${email} logged in`);
 
-    // Maintain global login history for admin panel
     const allUsers = await storage.get('cv_admin_users_log') || [];
     const userIndex = allUsers.findIndex(u => u.email === email);
     
     if (userIndex !== -1) {
       allUsers[userIndex].lastLogin = new Date().toISOString();
       allUsers[userIndex].totalLogins = (allUsers[userIndex].totalLogins || 1) + 1;
-      allUsers[userIndex].name = name; // Update name in case it changed
+      allUsers[userIndex].name = name;
     } else {
       allUsers.push({
         name,
@@ -74,17 +108,13 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     await logActivity('Logout', `User ${user?.email} logged out`);
     setUser(null);
-    // Note: To preserve user state like onboarding across sessions, we should probably just clear the session logic.
-    // However, since this is a local client mock app, we'll keep cv_user cleared but wait, the prompt says:
-    // "Store onboarding status in localStorage and redirect directly to Login."
-    // So removing cv_user is fine as long as onboarding status is a separate key.
     await storage.remove('cv_user');
   };
 
   const isAdmin = user?.email === 'lalithirvey6@gmail.com';
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAdmin, loading, updateProfile }}>
+    <AuthContext.Provider value={{ user, login, logout, isAdmin, loading, updateProfile, registerLocalUser, validateLocalLogin, resetLocalPassword }}>
       {children}
     </AuthContext.Provider>
   );

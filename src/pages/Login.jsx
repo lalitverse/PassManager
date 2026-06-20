@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { storage } from '../utils/storage';
-import { registerUser, loginUser } from '../api/auth';
 
 export default function Login() {
   const [step, setStep] = useState(1);
@@ -17,7 +16,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   
-  const { login } = useAuth();
+  const { login, registerLocalUser, validateLocalLogin } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,13 +66,13 @@ export default function Login() {
     try {
       if (isLoginMode) {
         // Handle Login
-        const data = await loginUser(email, password);
-        await login(data.user.name, data.user.email); // using context to set user
+        const localUser = await validateLocalLogin(email, password);
+        await login(localUser.name, localUser.email);
         await storage.set('cv_onboarding_completed', true);
         navigate('/dashboard', { replace: true });
       } else {
         // Handle Register
-        await registerUser(name, email, password);
+        await registerLocalUser(name, email, password);
         setSuccessMsg('Registration successful! You can now log in.');
         setIsLoginMode(true);
         setPassword('');

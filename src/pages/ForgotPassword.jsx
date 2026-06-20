@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { requestPasswordReset, submitNewPassword } from '../api/auth';
+import { useAuth } from '../hooks/useAuth';
 
 export default function ForgotPassword() {
   const [step, setStep] = useState(1);
@@ -12,6 +12,7 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const { resetLocalPassword } = useAuth();
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +32,8 @@ export default function ForgotPassword() {
     setIsSubmitting(true);
 
     try {
-      await requestPasswordReset(email);
+      // Mock sending an email
+      await new Promise(resolve => setTimeout(resolve, 500));
       setStep(2);
     } catch (err) {
       setError(err.message || 'An error occurred. Please try again.');
@@ -63,8 +65,8 @@ export default function ForgotPassword() {
     setIsSubmitting(true);
 
     try {
-      const response = await submitNewPassword(email, password);
-      setSuccess(response.message || 'Password successfully reset.');
+      await resetLocalPassword(email, password);
+      setSuccess('Password successfully reset.');
       setTimeout(() => {
         navigate('/login', { replace: true });
       }, 3000);
